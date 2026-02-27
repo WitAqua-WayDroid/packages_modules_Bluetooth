@@ -26,7 +26,7 @@
 #include "os/linux_generic/linux.h"
 #include "os/utils.h"
 
-#ifdef __ANDROID__
+#if 0
 #define ALARM_CLOCK CLOCK_BOOTTIME_ALARM
 #else
 #define ALARM_CLOCK CLOCK_BOOTTIME
