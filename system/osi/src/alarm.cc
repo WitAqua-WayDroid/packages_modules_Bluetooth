@@ -324,7 +324,7 @@ static bool lazy_initialize(void) {
   // on those platforms, if we go to sleep with a timer armed, it will
   // continue counting during sleep. to prevent unwanted timer fires on
   // those platforms, use CLOCK_MONOTONIC and don't count up during sleep.
-  bool wakeup_supported = android::sysprop::bluetooth::hardware::wakeup_supported().value_or(true);
+  bool wakeup_supported = false;
   clockid_t alarm_clockid = wakeup_supported ? CLOCK_BOOTTIME_ALARM : CLOCK_MONOTONIC;
 
   std::lock_guard<std::mutex> lock(alarms_mutex);
@@ -687,7 +687,7 @@ static bool timer_create_internal(const clockid_t clock_id, timer_t* timer) {
   sigevent.sigev_notify = SIGEV_THREAD;
   sigevent.sigev_notify_function = timer_callback;
   sigevent.sigev_notify_attributes = &thread_attr;
-  if (timer_create(clock_id, &sigevent, timer) == -1) {
+  if (timer_create(clock_id == CLOCK_BOOTTIME_ALARM ? CLOCK_BOOTTIME : clock_id, &sigevent, timer) == -1) {
     log::error("unable to create timer with clock {}: {}", clock_id, strerror(errno));
     if (clock_id == CLOCK_BOOTTIME_ALARM) {
       log::error(
