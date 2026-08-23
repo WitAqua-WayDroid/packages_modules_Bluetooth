@@ -45,7 +45,7 @@ impl Default for Alarm {
 }
 
 fn get_clock() -> ClockId {
-    if cfg!(target_os = "android") {
+    if false {
         ClockId::CLOCK_BOOTTIME_ALARM
     } else {
         ClockId::CLOCK_BOOTTIME
